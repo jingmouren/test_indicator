@@ -6,6 +6,7 @@ from os.path import isfile
 
 import pandas as pd
 import matplotlib.pyplot as plt
+import mplfinance as mpf
 
 from sw.indicator import *
 from utils.tools import download_index
@@ -29,11 +30,16 @@ if __name__ == '__main__':
     if not isfile(f'{data_dir}/{index_code}.csv'):
         download_index(data_dir=data_dir, index=index_code)
     df = pd.read_csv(f'{data_dir}/{index_code}.csv', parse_dates=['date'], infer_datetime_format='%Y-%m-%d')
-
+    df.set_index('date', inplace=True)
     # 提取开高收低，成交量
+    df = df.iloc[:100]
     OPEN, HIGH, CLOSE, LOW, VOL = df['open'], df['high'], df['close'], df['low'], df['volume']
+    ac = AC(HIGH, LOW)
     
-    df['ac'] = AC(HIGH, LOW)
-    df.plot(subplots=True, figsize=(16, 9))
+    ma5_plot = mpf.make_addplot(MA(CLOSE, 5), type='line')
+    ma10_plot = mpf.make_addplot(MA(CLOSE, 10), type='line')
     
-    plt.show()
+    mpf.plot(df, type='candle', addplot=[ma5_plot, ma10_plot], volume=True)
+    # df.plot(subplots=True, figsize=(16, 9))
+    
+    mpf.show()

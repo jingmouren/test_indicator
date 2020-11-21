@@ -27,3 +27,7 @@ def MAX(series1, series2):
 
 def MA(series, n):
     return series.rolling(n, min_periods=1).mean()
+
+
+def EMA(series, n):
+    return series.emw(span=n, adjust=False).mean()
