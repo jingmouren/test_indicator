@@ -31,3 +31,7 @@ def MA(series, n):
 
 def EMA(series, n):
     return series.emw(span=n, adjust=False).mean()
+
+
+def AVEDEV(series, n):
+    return series.rolling(n, min_periods=1).apply(lambda x: np.fabs(x - x.mean()).mean(), raw=True)
