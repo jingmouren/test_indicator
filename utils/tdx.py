@@ -25,6 +25,14 @@ def MAX(series1, series2):
     return np.maximum(series1, series2)
 
 
+def HHV(series, n):
+    return series.rolling(n, min_periods=1).max()
+
+
+def LLV(series, n):
+    return series.rolling(n, min_periods=1).min()
+
+
 def MA(series, n):
     return series.rolling(n, min_periods=1).mean()
 
