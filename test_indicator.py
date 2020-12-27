@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import mplfinance as mpf
 
 from sw.indicator import *
+from gf.indicator import *
 from utils.tools import download_index
 
 """
@@ -22,6 +23,18 @@ dataframe的结构
 4 2005-04-14  1004.64   986.97  1006.42  985.58  12945700.0  sh000300
 """
 
+
+def test_ac(df):
+    # ac = AC(HIGH, LOW)
+    # df.plot(subplots=True, figsize=(16, 9))
+    
+    ma5_plot = mpf.make_addplot(MA(CLOSE, 5), type='line')
+    ma10_plot = mpf.make_addplot(MA(CLOSE, 10), type='line')
+    
+    mpf.plot(df, type='candle', addplot=[ma5_plot, ma10_plot], volume=True)
+    mpf.show()
+
+
 if __name__ == '__main__':
     index_code = '000300'
     data_dir = 'data'
@@ -32,14 +45,7 @@ if __name__ == '__main__':
     df = pd.read_csv(f'{data_dir}/{index_code}.csv', parse_dates=['date'], infer_datetime_format='%Y-%m-%d')
     df.set_index('date', inplace=True)
     # 提取开高收低，成交量
-    df = df.iloc[:100]
     OPEN, HIGH, CLOSE, LOW, VOL = df['open'], df['high'], df['close'], df['low'], df['volume']
-    ac = AC(HIGH, LOW)
     
-    ma5_plot = mpf.make_addplot(MA(CLOSE, 5), type='line')
-    ma10_plot = mpf.make_addplot(MA(CLOSE, 10), type='line')
-    
-    mpf.plot(df, type='candle', addplot=[ma5_plot, ma10_plot], volume=True)
-    # df.plot(subplots=True, figsize=(16, 9))
-    
-    mpf.show()
+    df['dpo'] = DPO(CLOSE)
+    print(df['dpo'])

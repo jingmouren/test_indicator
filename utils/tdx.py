@@ -6,7 +6,7 @@ import numpy as np
 
 
 def REF(series, offset):
-    return series.shift(offset)
+    return series.shift(int(offset))
 
 
 def ABS(series):
@@ -14,7 +14,7 @@ def ABS(series):
 
 
 def SUM(series, num):
-    return series.rolling(num if num else len(series), min_periods=1).sum()
+    return series.rolling(int(num) if num else len(series), min_periods=1).sum()
 
 
 def IF(cond, result1, result2):
@@ -26,20 +26,20 @@ def MAX(series1, series2):
 
 
 def HHV(series, n):
-    return series.rolling(n, min_periods=1).max()
+    return series.rolling(int(n), min_periods=1).max()
 
 
 def LLV(series, n):
-    return series.rolling(n, min_periods=1).min()
+    return series.rolling(int(n), min_periods=1).min()
 
 
 def MA(series, n):
-    return series.rolling(n, min_periods=1).mean()
+    return series.rolling(int(n), min_periods=1).mean()
 
 
 def EMA(series, n):
-    return series.emw(span=n, adjust=False).mean()
+    return series.emw(span=int(n), adjust=False).mean()
 
 
 def AVEDEV(series, n):
-    return series.rolling(n, min_periods=1).apply(lambda x: np.fabs(x - x.mean()).mean(), raw=True)
+    return series.rolling(int(n), min_periods=1).apply(lambda x: np.fabs(x - x.mean()).mean(), raw=True)
