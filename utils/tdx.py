@@ -3,6 +3,7 @@
 # Author: mathchq <mathchq@gmail.com>
 
 import numpy as np
+import pandas as pd
 
 
 def REF(series, offset):
@@ -18,7 +19,7 @@ def SUM(series, num):
 
 
 def IF(cond, result1, result2):
-    return np.where(cond, result1, result2)
+    return pd.Series(np.where(cond, result1, result2))
 
 
 def MAX(series1, series2):
@@ -38,8 +39,12 @@ def MA(series, n):
 
 
 def EMA(series, n):
-    return series.emw(span=int(n), adjust=False).mean()
+    return series.ewm(span=int(n), adjust=False, ignore_na=True).mean()
 
 
 def AVEDEV(series, n):
     return series.rolling(int(n), min_periods=1).apply(lambda x: np.fabs(x - x.mean()).mean(), raw=True)
+
+
+def CEIL(series):
+    return np.ceil(series)

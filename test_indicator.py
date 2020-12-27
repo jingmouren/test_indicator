@@ -5,13 +5,11 @@
 from os.path import isfile
 
 import pandas as pd
-import matplotlib.pyplot as plt
-import mplfinance as mpf
 
 from sw.indicator import *
 from gf.indicator import *
 from utils.tools import download_index
-
+from utils.tdx import *
 """
 dataframe的结构
 
@@ -25,6 +23,8 @@ dataframe的结构
 
 
 def test_ac(df):
+    import mplfinance as mpf
+    
     # ac = AC(HIGH, LOW)
     # df.plot(subplots=True, figsize=(16, 9))
     
@@ -43,9 +43,13 @@ if __name__ == '__main__':
     if not isfile(f'{data_dir}/{index_code}.csv'):
         download_index(data_dir=data_dir, index=index_code)
     df = pd.read_csv(f'{data_dir}/{index_code}.csv', parse_dates=['date'], infer_datetime_format='%Y-%m-%d')
-    df.set_index('date', inplace=True)
     # 提取开高收低，成交量
     OPEN, HIGH, CLOSE, LOW, VOL = df['open'], df['high'], df['close'], df['low'], df['volume']
     
     df['dpo'] = DPO(CLOSE)
-    print(df['dpo'])
+    df['bull_power'], df['bear_power'] = ER(HIGH, LOW, CLOSE)
+    df['tii'] = TII(CLOSE)
+    df['po'] = PO(CLOSE)
+    df['t3'] = T3(CLOSE)
+    
+    print(df['t3'])
