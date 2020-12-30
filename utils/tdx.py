@@ -23,7 +23,7 @@ def IF(cond, result1, result2):
 
 
 def MAX(series1, series2):
-    return np.maximum(series1, series2)
+    return pd.Series(np.maximum(series1, series2))
 
 
 def HHV(series, n):
@@ -38,8 +38,20 @@ def MA(series, n):
     return series.rolling(int(n), min_periods=1).mean()
 
 
+# def EMA(series, n):
+#     return series.ewm(span=int(n), adjust=False, ignore_na=True).mean()
+
+
+def SMA(series, n, m):
+    return series.ewm(alpha=m/n, adjust=False, ignore_na=True).mean()
+
+
 def EMA(series, n):
-    return series.ewm(span=int(n), adjust=False, ignore_na=True).mean()
+    return SMA(series, n+1, 2)
+
+
+def STD(series, n):
+    return series.rolling(int(n), min_periods=1).std()
 
 
 def AVEDEV(series, n):
